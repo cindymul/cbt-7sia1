@@ -21,10 +21,10 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'skylast@gmail.com'],
             [
-                'name' => 'M. Arifin',
-                'username' => 'skylast',
+                'name' => 'Cindy Mulia Hasibuan',
+                'username' => 'cindymulia',
                 'is_staff' => true,
-                'password' => Hash::make('skylast123_')
+                'password' => Hash::make('rahasia')
             ]
         );
 
