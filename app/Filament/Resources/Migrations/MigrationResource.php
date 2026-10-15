@@ -2,47 +2,106 @@
 
 namespace App\Filament\Resources\Migrations;
 
-use App\Filament\Resources\Migrations\Pages\CreateMigration;
-use App\Filament\Resources\Migrations\Pages\EditMigration;
 use App\Filament\Resources\Migrations\Pages\ListMigrations;
-use App\Filament\Resources\Migrations\Schemas\MigrationForm;
-use App\Filament\Resources\Migrations\Tables\MigrationsTable;
 use App\Models\Migration;
 use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class MigrationResource extends Resource
 {
     protected static ?string $model = Migration::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-circle-stack';
+
+    protected static ?string $recordTitleAttribute = 'migration';
+
+    // Tidak menggunakan navigationGroup, sehingga muncul di root menu
+    protected static string|UnitEnum|null $navigationGroup = null;
+
+    protected static ?string $modelLabel = 'Migrasi';
+
+    protected static ?string $pluralModelLabel = 'Data Migrasi';
+
+    protected static ?string $navigationLabel = 'Migrasi';
+
+    protected static ?int $navigationSort = 99;
 
     public static function form(Schema $schema): Schema
     {
-        return MigrationForm::configure($schema);
+        return $schema
+            ->components([
+                TextInput::make('migration')
+                    ->label('Nama Migrasi')
+                    ->columnSpanFull()
+                    ->required(),
+                TextInput::make('batch')
+                    ->label('Kelompok')
+                    ->numeric()
+                    ->required(),
+            ]);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                TextEntry::make('id')
+                    ->label('NO'),
+                TextEntry::make('migration')
+                    ->label('Nama Migrasi'),
+                TextEntry::make('batch')
+                    ->label('Kelompok'),
+            ]);
     }
 
     public static function table(Table $table): Table
     {
-        return MigrationsTable::configure($table);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+        return $table
+            ->recordTitleAttribute('migration')
+            ->defaultSort('id', 'desc')
+            ->columns([
+                TextColumn::make('id')
+                    ->label('NO')
+                    ->sortable(),
+                TextColumn::make('migration')
+                    ->label('Nama Migrasi')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('batch')
+                    ->label('Kelompok')
+                    ->sortable(),
+            ])
+            ->filters([
+                //
+            ])
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getPages(): array
     {
         return [
             'index' => ListMigrations::route('/'),
-            'create' => CreateMigration::route('/create'),
-            'edit' => EditMigration::route('/{record}/edit'),
         ];
     }
 }

@@ -19,18 +19,19 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::updateOrCreate(
-            ['email' => 'skylast@gmail.com'],
+            ['email' => 'cindymuliahasibuan@gmail.com'],
             [
-                'name' => 'Cindy Mulia Hasibuan',
-                'username' => 'cindymulia',
+                'name' => 'Cindy',
+                'username' => 'cindymul',
                 'is_staff' => true,
-                'password' => Hash::make('rahasia')
+                'password' => Hash::make('12345678')
             ]
         );
 
         
         $this->call([
             SubjectQuestionSeeder::class,
+            ExamResultSeeder::class,
         ]);
     }
 }

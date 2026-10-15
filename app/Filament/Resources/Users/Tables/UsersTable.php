@@ -41,8 +41,8 @@ class UsersTable
                     ->label('Telepon')
                     ->placeholder('-')
                     ->searchable(),
-                IconColumn::make('is_staff')
-                    ->boolean(),
+                // IconColumn::make('is_staff')
+                //     ->boolean(),
                 TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d F Y, H:i:s')
